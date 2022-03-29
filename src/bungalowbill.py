@@ -8,9 +8,11 @@ class Bungalow:
     def __init__(self, path):
         self.path = path
 
-    def operation_from_dict(self, op_dict):
-        # given the result of gate.__dict__, re-create the 'gate' variable.
+    def op_from_dict(self, op_dict):
         return getattr(qml, op_dict["_name"])(*op_dict["data"], wires=op_dict["_wires"])
+
+    def req_grad_op_from_dict(self, op_dict, arg):
+        return getattr(qml, op_dict["_name"])(arg, wires=op_dict["_wires"])
 
     def gates(self, circuit, *args, **kwargs):
         circuit(*args)
@@ -43,13 +45,23 @@ class Bungalow:
         with open(path, "rb") as f:
             op_dict = pickle.load(f)
 
-        def layer():
-            # operations = []
+        # grab all requires_grad data
+        req_grad_args = []
+        for key in op_dict.keys():
+            if isinstance(key, int):
+                if op_dict[key]["data"] and op_dict[key]["data"][0].requires_grad:
+                    req_grad_args.append(op_dict[key]["data"][0])
+
+        def layer(*args, j=0):
             for key in op_dict.keys():
                 if isinstance(key, int):
-                    # operation = self.operation_from_dict(op_dict[key])
-                    # operations.append(operation)
-                    self.operation_from_dict(op_dict[key])
+                    if (
+                        not op_dict[key]["data"]
+                        or not op_dict[key]["data"][0].requires_grad
+                    ):
+                        self.op_from_dict(op_dict[key])
+                    else:
+                        self.req_grad_op_from_dict(op_dict[key], args[j])
+                        j += 1
 
-        return op_dict["device"], layer
-
+        return req_grad_args, op_dict["device"], layer
