@@ -1,5 +1,5 @@
 foo
 bar
-Modified: I changed !
+Modified: I c!
 blah blah
 baz
