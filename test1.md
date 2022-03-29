@@ -1,5 +1,5 @@
 foo
 bar
-Modified: I changed a test file!
+Modified: I changed !
 blah blah
 baz
