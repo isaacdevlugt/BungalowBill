@@ -19,6 +19,7 @@ jobs:
         run: |
           changed_mds=$(git diff --name-only | grep *.md)
           sed -i "s/Modified:.*/Modified: $(date +'%F %H:%I')/" $changed_mds
+        shell: bash 
           
       - name: Commit changes
         run: |
