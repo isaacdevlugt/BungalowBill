@@ -1,5 +1,5 @@
 foo
 bar
-Modified: what time is it???
+Modified: I changed a test file!
 blah blah
 baz
