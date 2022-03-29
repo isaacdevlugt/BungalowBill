@@ -2,7 +2,7 @@ name: timestamp
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - '*.md'
 
