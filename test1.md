@@ -1,5 +1,5 @@
 foo
 bar
-Modified: aasasdasdasd!
+Modified: 2022-09
 blah blah
 baz
